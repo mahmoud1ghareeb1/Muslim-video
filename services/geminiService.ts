@@ -1,14 +1,12 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Ensure the API_KEY is set in the environment variables
-const API_KEY = process.env.API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
 
 if (!API_KEY) {
-  console.error("API_KEY for Gemini is not set in environment variables.");
+  console.error("VITE_GEMINI_API_KEY for Gemini is not set in environment variables.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
+const ai = new GoogleGenAI({ apiKey: API_KEY || "" });
 
 interface VideoMetadata {
     title: string;
