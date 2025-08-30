@@ -47,7 +47,7 @@ export const useVideoLinks = () => {
 
     // Load from Supabase + subscribe to realtime changes
     useEffect(() => {
-        if (!supabaseEnabled || !supabase) return;
+        if (!supabaseEnabled) return;
 
         let isMounted = true;
 
@@ -105,11 +105,11 @@ export const useVideoLinks = () => {
             isMounted = false;
             supabase.removeChannel(channel);
         };
-    }, [supabaseEnabled, supabase]);
+    }, [supabaseEnabled]);
 
     const addVideoLink = useCallback(async (video: Omit<VideoLink, 'id' | 'platform'>) => {
         const platform = getPlatformFromUrl(video.url);
-        if (supabaseEnabled && supabase) {
+        if (supabaseEnabled) {
             const { data, error } = await supabase
                 .from('video_links')
                 .insert({ url: video.url, title: video.title, thumbnail_url: video.thumbnailUrl, platform })
@@ -140,10 +140,10 @@ export const useVideoLinks = () => {
             };
             setVideoLinks(prev => [newVideo, ...prev]);
         }
-    }, [supabaseEnabled, supabase]);
+    }, [supabaseEnabled]);
 
     const updateVideoLink = useCallback(async (id: string, updatedVideo: Partial<VideoLink>) => {
-        if (supabaseEnabled && supabase) {
+        if (supabaseEnabled) {
             const updates: Partial<DbRow> = {
                 url: updatedVideo.url,
                 title: updatedVideo.title,
@@ -162,17 +162,17 @@ export const useVideoLinks = () => {
                     : link
             )
         );
-    }, [supabaseEnabled, supabase]);
+    }, [supabaseEnabled]);
 
     const deleteVideoLink = useCallback(async (id: string) => {
-        if (supabaseEnabled && supabase) {
+        if (supabaseEnabled) {
             const { error } = await supabase.from('video_links').delete().eq('id', id);
             if (error) {
                 console.error(error);
             }
         }
         setVideoLinks(prevLinks => prevLinks.filter(link => link.id !== id));
-    }, [supabaseEnabled, supabase]);
+    }, [supabaseEnabled]);
 
     return { videoLinks, addVideoLink, updateVideoLink, deleteVideoLink };
 };
