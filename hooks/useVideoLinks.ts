@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { VideoLink, Platform } from '../types';
-import { getSupabase, hasSupabase } from '../services/supabaseClient';
+import supabase from '../services/supabaseClient';
 
 const getPlatformFromUrl = (url: string): Platform => {
     if (/youtube\.com|youtu\.be/.test(url)) return 'youtube';
