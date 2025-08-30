@@ -56,7 +56,7 @@ export const useVideoLinks = () => {
             id: r.id,
             url: r.url,
             title: r.title,
-            thumbnailUrl: r.thumbnail_url,
+            thumbnailUrl: r.thumbnail_url && r.thumbnail_url.trim() ? r.thumbnail_url : 'https://picsum.photos/400/225',
             platform: (r.platform as Platform) || getPlatformFromUrl(r.url),
         });
 
@@ -128,7 +128,7 @@ export const useVideoLinks = () => {
                 id: inserted.id,
                 url: inserted.url,
                 title: inserted.title,
-                thumbnailUrl: inserted.thumbnail_url,
+                thumbnailUrl: inserted.thumbnail_url && inserted.thumbnail_url.trim() ? inserted.thumbnail_url : 'https://picsum.photos/400/225',
                 platform: (inserted.platform as Platform) || platform,
             };
             setVideoLinks(prev => [mapped, ...prev]);
