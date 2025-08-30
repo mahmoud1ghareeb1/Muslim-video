@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { VideoLink } from '../types';
 import { YoutubeIcon, FacebookIcon, InstagramIcon, TwitterIcon, TiktokIcon, OtherLinkIcon, ShareIcon, EditIcon, DeleteIcon } from './Icons';
@@ -47,12 +46,12 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onEdit, onDelete }) => {
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform transform hover:scale-105 duration-300">
       <a href={video.url} target="_blank" rel="noopener noreferrer" className="block relative">
         <img
-          src={video.thumbnailUrl}
+          src={video.thumbnailUrl && video.thumbnailUrl.trim() ? video.thumbnailUrl : 'https://picsum.photos/400/225'}
           alt={video.title}
           className="w-full h-40 object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.onerror = null; 
+            target.onerror = null;
             target.src = 'https://picsum.photos/400/225';
           }}
         />
