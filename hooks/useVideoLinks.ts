@@ -33,8 +33,7 @@ export const useVideoLinks = () => {
         }
     });
 
-    const supabaseEnabled = hasSupabase();
-    const supabase = getSupabase();
+    const supabaseEnabled = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
     const lastLocalInsertIdRef = useRef<string | null>(null);
 
     // Persist to localStorage as a cache (also used when Supabase is not configured)
