@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { VideoLink } from './types';
 import { useVideoLinks } from './hooks/useVideoLinks';
 import Header from './components/Header';
@@ -11,6 +11,29 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingVideo, setEditingVideo] = useState<VideoLink | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().catch(() => void 0);
+      }
+      const handler = (e: Event) => {
+        const detail = (e as CustomEvent<VideoLink>).detail;
+        if (Notification.permission === 'granted') {
+          const title = 'تم إضافة رابط جديد';
+          const body = detail.title;
+          const icon = detail.thumbnailUrl;
+          try {
+            new Notification(title, { body, icon });
+          } catch (_) {
+            // ignore
+          }
+        }
+      };
+      window.addEventListener('video-inserted', handler as EventListener);
+      return () => window.removeEventListener('video-inserted', handler as EventListener);
+    }
+  }, []);
 
   const openModal = useCallback(() => setIsModalOpen(true), []);
   const closeModal = useCallback(() => {
@@ -34,7 +57,7 @@ const App: React.FC = () => {
     setEditingVideo(video);
     openModal();
   }, [openModal]);
-  
+
   const handleDelete = useCallback((id: string) => {
     if(window.confirm('هل أنت متأكد من أنك تريد حذف هذا الرابط؟')) {
         deleteVideoLink(id);
@@ -59,7 +82,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <Header onAddClick={openModal} onSearch={handleSearch} />
-      
+
       <main className="container mx-auto p-4 md:p-8">
         {videoLinks.length === 0 ? (
            <div className="text-center py-20">
@@ -81,8 +104,8 @@ const App: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredVideos.map(video => (
-              <VideoCard 
-                key={video.id} 
+              <VideoCard
+                key={video.id}
                 video={video}
                 onEdit={() => handleEdit(video)}
                 onDelete={() => handleDelete(video.id)}
